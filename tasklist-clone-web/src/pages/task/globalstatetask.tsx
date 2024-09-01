@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import type { TaskData } from '@/type/type'
 
 interface GlobalStateProps {
   children: ReactNode;
 }
 
 interface GlobalStateContextProps {
-    id: string;
-    setId: React.Dispatch<React.SetStateAction<string>>;
+    selectedTaskData: TaskData;
+    setselectedTaskData: React.Dispatch<React.SetStateAction<any>>;
     taskfilter: string;
     setTaskFilter: React.Dispatch<React.SetStateAction<string>>;
   }
@@ -14,11 +15,36 @@ interface GlobalStateContextProps {
 const GlobalStateContext = createContext<GlobalStateContextProps | undefined>(undefined);
 
 export const GlobalStateProvider: React.FC<GlobalStateProps> = ({ children }) => {
-  const [id, setId] = useState<string>('');
+  const [selectedTaskData, setselectedTaskData] = useState<TaskData>({
+    id: '',
+    name: '',
+    taskDefinitionId: '',
+    processName: '',
+    creationDate: '',
+    completionDate: null,
+    assignee: '',
+    taskState: '',
+    sortValues: [],
+    isFirst: false,
+    formKey: '',
+    formId: null,
+    formVersion: null,
+    isFormEmbedded: false,
+    processDefinitionKey: '',
+    processInstanceKey: '',
+    tenantId: '',
+    dueDate: null,
+    followUpDate: '',
+    candidateGroups: [],
+    candidateUsers: [],
+    variables: [],
+    context: null,
+    implementation: '',
+  });
   const [taskfilter, setTaskFilter] = useState<any>({});
 
   return (
-    <GlobalStateContext.Provider value={{ id, setId, taskfilter, setTaskFilter }}>
+    <GlobalStateContext.Provider value={{ selectedTaskData, setselectedTaskData, taskfilter, setTaskFilter }}>
       {children}
     </GlobalStateContext.Provider>
   );
