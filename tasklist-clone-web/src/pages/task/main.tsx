@@ -6,7 +6,7 @@ import { GlobalStateProvider } from './globalstatetask';
 
 const Main: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
+
   return (
     <GlobalStateProvider>
       <div className="h-screen w-screen grid grid-cols-[20rem,1fr] grid-rows-1 pt-12">

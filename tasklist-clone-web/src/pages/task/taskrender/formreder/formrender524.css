@@ -626,6 +626,10 @@
     outline: var(--outline-definition);
   }
   
+  /* .fjs-powered-by.fjs-form-field {
+    display: none;
+  } */
+
   .fjs-container .fjs-input-group .fjs-input,
   .fjs-container .fjs-input-group .fjs-input:focus {
     outline: none;
