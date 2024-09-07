@@ -18,10 +18,11 @@ func Run(pipe <-chan []byte) {
 		select {
 		case data := <-pipe:
 			// workerPipe <- data
-			fmt.Println("Data received", string(data))
+			// fmt.Println("Data received", string(data))
 			record.TypeClasify(data)
 		case <-saveticker.C:
 			// service.PerformBatchRecord()
+			record.PerformBatchRecord()
 			fmt.Println("Cut off na")
 			record.PurgeAllRecords() // Clear all records
 		}

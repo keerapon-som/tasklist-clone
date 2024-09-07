@@ -5,6 +5,7 @@ go 1.21.3
 require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/gofiber/fiber/v2 v2.52.5
+	github.com/lib/pq v1.10.9
 	google.golang.org/protobuf v1.26.0
 )
 

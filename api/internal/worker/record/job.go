@@ -3,6 +3,9 @@ package record
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/keerapon-som/tasklist-clone/api/internal/repo/exporter/tasklistRepo"
+	"github.com/keerapon-som/tasklist-clone/api/internal/worker/data"
 )
 
 type jobManager struct {
@@ -24,7 +27,7 @@ func (m *jobManager) TohistoryTable(jobrecords []JobRecord) {
 
 func (m *jobManager) ToTasklistTaskTable(jobrecords []JobRecord) {
 	var listToTasklistTask []data.TasklistTask
-	repo := repo.NewTasksRepo()
+	repo := tasklistRepo.NewTasklistTaskRepo()
 
 	for _, job := range jobrecords {
 		if job.Type == "io.camunda.zeebe:userTask" {
@@ -105,7 +108,11 @@ func (m *jobManager) ToTasklistTaskTable(jobrecords []JobRecord) {
 	}
 	prettyJsonFormat, _ := json.MarshalIndent(listToTasklistTask, "", "  ")
 	fmt.Println(string(prettyJsonFormat))
-	repo.InsertAndUpdate(listToTasklistTask)
+	err := repo.InsertAndUpdate(listToTasklistTask)
+	if err != nil {
+		fmt.Println("ERROR TO APPEND TO POSTGRESQL", err)
+		return
+	}
 }
 
 func JobsToDB(pipe chan JobRecord) {
@@ -117,9 +124,7 @@ func JobsToDB(pipe chan JobRecord) {
 			batchjobRecords = append(batchjobRecords, job)
 		default:
 			fmt.Println("-----Perform Tasklist Task Table-----")
-			go ToTasklistTaskTable(batchjobRecords)
-			// fmt.Println("-----Perform History Job Table-----")
-			// go mng.JobManager.TohistoryTable(batchjobRecords)
+			go mng.JobManager.ToTasklistTaskTable(batchjobRecords)
 			return
 		}
 	}

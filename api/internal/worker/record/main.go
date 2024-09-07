@@ -209,4 +209,8 @@ func PerformBatchRecord() {
 	if len(recordVariable) != 0 {
 		go VariablesToDB(recordVariable)
 	}
+
+	if len(recordVariable) != 0 {
+		go DeploymentToDB(recordDeployment)
+	}
 }

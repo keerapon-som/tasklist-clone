@@ -3,8 +3,9 @@ package record
 import (
 	"encoding/json"
 	"fmt"
-	"readq/internal/data"
-	"readq/internal/repo"
+
+	"github.com/keerapon-som/tasklist-clone/api/internal/repo/exporter/tasklistRepo"
+	"github.com/keerapon-som/tasklist-clone/api/internal/worker/data"
 )
 
 type variableManager struct {
@@ -25,7 +26,7 @@ func (m *variableManager) TohistoryTable(variableRecords []VariableRecord) {
 }
 
 func (m *variableManager) ToTasklistVariablesTable(variableRecords []VariableRecord) {
-	repo := repo.NewVariablesRepo()
+	repo := tasklistRepo.NewTasklistVariablesRepo()
 
 	var records []data.TasklistVariables
 
@@ -63,12 +64,10 @@ func VariablesToDB(pipe chan VariableRecord) {
 	for {
 		select {
 		case variable := <-pipe:
+
 			batchVariableRecords = append(batchVariableRecords, variable)
 		default:
-			// jobmng.ToTasklistTaskTable(batchjobRecords)
-			// fmt.Println("-----Perform History Variable Table-----")
-			// mng.VariableManager.TohistoryTable(batchVariableRecords)
-			mng.VariableManager.ToTasklistVariablesTable(batchVariableRecords)
+			go mng.VariableManager.ToTasklistVariablesTable(batchVariableRecords)
 			return
 		}
 	}
